@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        //applicationId 'com.jojoeasypixel.jojoeastpixeldungeon'
+        resConfigs "en_US", "cs", "tr", "ca", "ko", "pl", "it",
+                "eo", "ru", "zh_CN", "de", "fr", "es", "pt", "fi", "hu", "in"
+        //noinspection MinSdkTooLow
+        minSdkVersion 8
+        targetSdkVersion 28
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".indev"
+            versionNameSuffix '-INDEV'
+        }
+        release {
+
+            //These lines enable R8, which is a code shrinker/optimizer/obfuscator.
+            //This makes release APKs smaller and more efficient, but also makes debugging trickier
+            //as the information produced in stack traces must be de-obfuscated.
+            //See here: https://developer.android.com/studio/build/shrink-code#decode-stack-trace
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':SPD-classes')
+    repositories {
+        google()
+        jcenter()
+    }
+}
