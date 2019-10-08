@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts._Metalica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -96,6 +97,10 @@ public class Invisibility extends FlavourBuff {
 		CloakOfShadows.cloakStealth cloakBuff = Dungeon.hero.buff( CloakOfShadows.cloakStealth.class );
 		if (cloakBuff != null) {
 			cloakBuff.dispel();
+		}
+		_Metalica.cloakStealth metalcaBuff = Dungeon.hero.buff( _Metalica.cloakStealth.class );
+		if (metalcaBuff != null) {
+			metalcaBuff.dispel();
 		}
 		
 		//these aren't forms of invisibilty, but do dispel at the same time as it.

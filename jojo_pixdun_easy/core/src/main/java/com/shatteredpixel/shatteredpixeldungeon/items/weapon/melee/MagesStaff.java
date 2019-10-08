@@ -97,7 +97,7 @@ public class MagesStaff extends MeleeWeapon {
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
-		actions.add(AC_IMBUE);
+		//actions.add(AC_IMBUE);
 		if (wand!= null && wand.curCharges > 0) {
 			actions.add( AC_ZAP );
 		}
@@ -258,7 +258,7 @@ public class MagesStaff extends MeleeWeapon {
 			//perhaps reword to fit in journal better
 			//info += "\n\n" + Messages.get(this, "no_wand");
 		} else {
-			info += "\n\n" + Messages.get(this, "has_wand", Messages.get(wand, "name")) + " " + wand.statsDesc();
+			info += "\n\n" + wand.statsDesc();
 		}
 
 		return info;

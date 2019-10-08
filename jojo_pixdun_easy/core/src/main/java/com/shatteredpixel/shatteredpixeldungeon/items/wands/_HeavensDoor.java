@@ -35,10 +35,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs._Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs._Doom;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
@@ -53,6 +51,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs._Corruption;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs._Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.King;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
@@ -75,24 +75,25 @@ import com.watabou.utils.Random;
 
 import java.util.HashMap;
 
+//TODO need to consider other balance adjustments here. Might want to put more emphasis into debuffs rather than less
 public class _HeavensDoor extends Wand {
 
 	{
 		image = ItemSpriteSheet.WAND_CORRUPTION;
 	}
-	
+
 	//Note that some debuffs here have a 0% chance to be applied.
 	// This is because the wand of corruption considers them to be a certain level of harmful
 	// for the purposes of reducing resistance, but does not actually apply them itself
-	
-	private static final float MINOR_DEBUFF_WEAKEN = 4/5f;
+
+	private static final float MINOR_DEBUFF_WEAKEN = 7/8f;
 	private static final HashMap<Class<? extends Buff>, Float> MINOR_DEBUFFS = new HashMap<>();
 	static{
-		MINOR_DEBUFFS.put(Weakness.class,       0f);
-		MINOR_DEBUFFS.put(Cripple.class,        0f);
-		MINOR_DEBUFFS.put(Blindness.class,      0f);
-		MINOR_DEBUFFS.put(Terror.class,         0f);
-		
+		MINOR_DEBUFFS.put(Weakness.class,       2f);
+		MINOR_DEBUFFS.put(Cripple.class,        1f);
+		MINOR_DEBUFFS.put(Blindness.class,      1f);
+		MINOR_DEBUFFS.put(Terror.class,         1f);
+
 		MINOR_DEBUFFS.put(Chill.class,          0f);
 		MINOR_DEBUFFS.put(Ooze.class,           0f);
 		MINOR_DEBUFFS.put(Roots.class,          0f);
@@ -102,36 +103,36 @@ public class _HeavensDoor extends Wand {
 		MINOR_DEBUFFS.put(Burning.class,        0f);
 		MINOR_DEBUFFS.put(Poison.class,         0f);
 	}
-	
-	private static final float MAJOR_DEBUFF_WEAKEN = 2/3f;
+
+	private static final float MAJOR_DEBUFF_WEAKEN = 4/5f;
 	private static final HashMap<Class<? extends Buff>, Float> MAJOR_DEBUFFS = new HashMap<>();
 	static{
-		MAJOR_DEBUFFS.put(Amok.class,           0f);
-		MAJOR_DEBUFFS.put(Slow.class,           0f);
-		MAJOR_DEBUFFS.put(Paralysis.class,      0f);
-		
+		MAJOR_DEBUFFS.put(Amok.class,           3f);
+		MAJOR_DEBUFFS.put(Slow.class,           2f);
+		MAJOR_DEBUFFS.put(Paralysis.class,      1f);
+
 		MAJOR_DEBUFFS.put(Charm.class,          0f);
 		MAJOR_DEBUFFS.put(MagicalSleep.class,   0f);
 		MAJOR_DEBUFFS.put(SoulMark.class,       0f);
 		MAJOR_DEBUFFS.put(Corrosion.class,      0f);
 		MAJOR_DEBUFFS.put(Frost.class,          0f);
-		MAJOR_DEBUFFS.put(_Doom.class,       0f);
+		MAJOR_DEBUFFS.put(_Doom.class,           0f);
 	}
-	
+
 	@Override
 	protected void onZap(Ballistica bolt) {
 		Char ch = Actor.findChar(bolt.collisionPos);
 
 		if (ch != null){
-			
+
 			if (!(ch instanceof Mob)){
 				return;
 			}
 
 			Mob enemy = (Mob) ch;
 
-			float corruptingPower = 999 + level();
-			
+			float corruptingPower = 100 + level();
+
 			//base enemy resistance is usually based on their exp, but in special cases it is based on other criteria
 			float enemyResist = 1 + enemy.EXP;
 			if (ch instanceof Mimic || ch instanceof Statue){
@@ -149,22 +150,22 @@ public class _HeavensDoor extends Wand {
 				//child swarms don't give exp, so we force this here.
 				enemyResist = 1 + 3;
 			}
-			
+
 			//100% health: 3x resist   75%: 2.1x resist   50%: 1.5x resist   25%: 1.1x resist
 			enemyResist *= 1 + 2*Math.pow(enemy.HP/(float)enemy.HT, 2);
-			
+
 			//debuffs placed on the enemy reduce their resistance
 			for (Buff buff : enemy.buffs()){
 				if (MAJOR_DEBUFFS.containsKey(buff.getClass()))         enemyResist *= MAJOR_DEBUFF_WEAKEN;
 				else if (MINOR_DEBUFFS.containsKey(buff.getClass()))    enemyResist *= MINOR_DEBUFF_WEAKEN;
 				else if (buff.type == Buff.buffType.NEGATIVE)           enemyResist *= MINOR_DEBUFF_WEAKEN;
 			}
-			
+
 			//cannot re-corrupt or doom an enemy, so give them a major debuff instead
 			if(enemy.buff(_Corruption.class) != null || enemy.buff(_Doom.class) != null){
 				corruptingPower = enemyResist - 0.001f;
 			}
-			
+
 			if (corruptingPower > enemyResist){
 				corruptEnemy( enemy );
 			} else {
@@ -177,14 +178,14 @@ public class _HeavensDoor extends Wand {
 			}
 
 			processSoulMark(ch, chargesPerCast());
-			
+
 		} else {
 			Dungeon.level.pressCell(bolt.collisionPos);
 		}
 	}
-	
+
 	private void debuffEnemy( Mob enemy, HashMap<Class<? extends Buff>, Float> category ){
-		
+
 		//do not consider buffs which are already assigned, or that the enemy is immune to.
 		HashMap<Class<? extends Buff>, Float> debuffs = new HashMap<>(category);
 		for (Buff existing : enemy.buffs()){
@@ -193,14 +194,14 @@ public class _HeavensDoor extends Wand {
 			}
 		}
 		for (Class<?extends Buff> toAssign : debuffs.keySet()){
-			 if (debuffs.get(toAssign) > 0 && enemy.isImmune(toAssign)){
-			 	debuffs.put(toAssign, 0f);
-			 }
+			if (debuffs.get(toAssign) > 0 && enemy.isImmune(toAssign)){
+				debuffs.put(toAssign, 0f);
+			}
 		}
-		
+
 		//all buffs with a > 0 chance are flavor buffs
 		Class<?extends FlavourBuff> debuffCls = (Class<? extends FlavourBuff>) Random.chances(debuffs);
-		
+
 		if (debuffCls != null){
 			Buff.append(enemy, debuffCls, 6 + level()*3);
 		} else {
@@ -209,30 +210,29 @@ public class _HeavensDoor extends Wand {
 			else if (category == MAJOR_DEBUFFS)     corruptEnemy( enemy );
 		}
 	}
-	
-	private void corruptEnemy( Mob enemy ) {
+
+	private void corruptEnemy( Mob enemy ){
 		//cannot re-corrupt or doom an enemy, so give them a major debuff instead
-		if (enemy.buff(_Doom.class) != null) {
-			GLog.w(Messages.get(this, "already_corrupted"));
+		if(enemy.buff(_Doom.class) != null){
+			GLog.w( Messages.get(this, "already_corrupted") );
 			return;
 		}
 
-		if (enemy.buff(_Corruption.class) != null) {
+		if(enemy.buff(_Corruption.class) != null){
 			Buff.affect(enemy, _Doom.class);
-			return;
 		}
 
-		if (!enemy.isImmune(Corruption.class)) {
+		if (!enemy.isImmune(_Corruption.class)){
 			//enemy.HP = enemy.HT;
 			for (Buff buff : enemy.buffs()) {
 				if (buff.type == Buff.buffType.NEGATIVE
 						&& !(buff instanceof SoulMark)) {
 					buff.detach();
-				} else if (buff instanceof PinCushion) {
+				} else if (buff instanceof PinCushion){
 					buff.detach();
 				}
 			}
-			if (enemy.alignment == Char.Alignment.ENEMY) {
+			if (enemy.alignment == Char.Alignment.ENEMY){
 				enemy.rollToDropLoot();
 			}
 
@@ -282,16 +282,4 @@ public class _HeavensDoor extends Wand {
 		particle.shuffleXY(1f);
 	}
 
-	@Override
-	public void wandUsed() {
-
-		updateQuickslot();
-
-		curUser.spendAndNext( 1f );
-	}
-
-	@Override
-	public String status() {
-		return null;
-	}
 }

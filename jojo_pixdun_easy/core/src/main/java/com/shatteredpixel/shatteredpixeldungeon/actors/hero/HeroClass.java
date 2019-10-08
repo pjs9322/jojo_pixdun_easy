@@ -28,7 +28,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts._Metalica;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts._SlowDancer;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
@@ -176,10 +175,6 @@ public enum HeroClass {
 
 		Dungeon.quickslot.setSlot(0, cloak);
 		Dungeon.quickslot.setSlot(1, knives);
-
-		// 메탈리카를 시작 아이템에 추가
-		// CloakOfShadowsCopy enigma = new CloakOfShadowsCopy();
-		// enigma.identify().collect();
 
 		new VelvetPouch().collect();
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
