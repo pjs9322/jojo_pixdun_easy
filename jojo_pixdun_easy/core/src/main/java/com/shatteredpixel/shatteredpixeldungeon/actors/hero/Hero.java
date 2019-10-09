@@ -465,9 +465,9 @@ public class Hero extends Char {
 		if (belongings.weapon != null) {
 
 			// 직업이 전사일 경우 공격 딜레이 1/2
-			float delay = belongings.weapon.speedFactor( this );
-			return heroClass == HeroClass.WARRIOR ? delay / 2f : delay;
-			//return belongings.weapon.speedFactor( this );
+			//float delay = belongings.weapon.speedFactor( this );
+			//return heroClass == HeroClass.WARRIOR ? delay / 2f : delay;
+			return belongings.weapon.speedFactor( this );
 			
 		} else {
 			//Normally putting furor speed on unarmed attacks would be unnecessary

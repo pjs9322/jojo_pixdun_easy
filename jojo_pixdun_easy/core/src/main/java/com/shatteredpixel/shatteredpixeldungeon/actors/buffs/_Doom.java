@@ -27,13 +27,11 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class _Doom extends Buff {
-	
+
 	{
 		type = buffType.NEGATIVE;
 		announced = true;
 	}
-
-	private float buildToDamage = 0f;
 
 	@Override
 	public boolean attachTo( Char target ) {
@@ -47,11 +45,10 @@ public class _Doom extends Buff {
 
 	@Override
 	public boolean act() {
-		buildToDamage = target.HP / 4f;
 
-		int damage = (int)buildToDamage;
+		int damage = (int)(target.HT / 4f);
 
-		target.damage(Math.max(damage, 1), this);
+		target.damage(damage, this);
 
 		spend(TICK);
 
@@ -63,17 +60,17 @@ public class _Doom extends Buff {
 		if (on) target.sprite.add( CharSprite.State.BURNING );
 		else if (target.invisible == 0) target.sprite.remove( CharSprite.State.BURNING );
 	}
-	
+
 	@Override
 	public int icon() {
-		return BuffIndicator.CORRUPT;
+		return BuffIndicator.FIRE;
 	}
-	
+
 	@Override
 	public String toString() {
 		return Messages.get(this, "name");
 	}
-	
+
 	@Override
 	public String desc() {
 		return Messages.get(this, "desc");

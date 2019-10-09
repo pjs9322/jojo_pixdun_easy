@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
@@ -89,10 +90,10 @@ public class _HeavensDoor extends Wand {
 	private static final float MINOR_DEBUFF_WEAKEN = 7/8f;
 	private static final HashMap<Class<? extends Buff>, Float> MINOR_DEBUFFS = new HashMap<>();
 	static{
-		MINOR_DEBUFFS.put(Weakness.class,       2f);
-		MINOR_DEBUFFS.put(Cripple.class,        1f);
-		MINOR_DEBUFFS.put(Blindness.class,      1f);
-		MINOR_DEBUFFS.put(Terror.class,         1f);
+		MINOR_DEBUFFS.put(Weakness.class,       0f);
+		MINOR_DEBUFFS.put(Cripple.class,        0f);
+		MINOR_DEBUFFS.put(Blindness.class,      0f);
+		MINOR_DEBUFFS.put(Terror.class,         0f);
 
 		MINOR_DEBUFFS.put(Chill.class,          0f);
 		MINOR_DEBUFFS.put(Ooze.class,           0f);
@@ -107,16 +108,16 @@ public class _HeavensDoor extends Wand {
 	private static final float MAJOR_DEBUFF_WEAKEN = 4/5f;
 	private static final HashMap<Class<? extends Buff>, Float> MAJOR_DEBUFFS = new HashMap<>();
 	static{
-		MAJOR_DEBUFFS.put(Amok.class,           3f);
-		MAJOR_DEBUFFS.put(Slow.class,           2f);
-		MAJOR_DEBUFFS.put(Paralysis.class,      1f);
+		MAJOR_DEBUFFS.put(Amok.class,           0f);
+		MAJOR_DEBUFFS.put(Slow.class,           0f);
+		MAJOR_DEBUFFS.put(Paralysis.class,      0f);
 
 		MAJOR_DEBUFFS.put(Charm.class,          0f);
 		MAJOR_DEBUFFS.put(MagicalSleep.class,   0f);
 		MAJOR_DEBUFFS.put(SoulMark.class,       0f);
 		MAJOR_DEBUFFS.put(Corrosion.class,      0f);
 		MAJOR_DEBUFFS.put(Frost.class,          0f);
-		MAJOR_DEBUFFS.put(_Doom.class,           0f);
+		MAJOR_DEBUFFS.put(_Doom.class,          0f);
 	}
 
 	@Override
@@ -165,7 +166,7 @@ public class _HeavensDoor extends Wand {
 			if(enemy.buff(_Corruption.class) != null || enemy.buff(_Doom.class) != null){
 				corruptingPower = enemyResist - 0.001f;
 			}
-
+			/*
 			if (corruptingPower > enemyResist){
 				corruptEnemy( enemy );
 			} else {
@@ -175,7 +176,9 @@ public class _HeavensDoor extends Wand {
 				} else {
 					debuffEnemy( enemy, MINOR_DEBUFFS);
 				}
-			}
+			}*/
+			// 저항력에 관계없이 타락 또는 저주
+			corruptEnemy( enemy );
 
 			processSoulMark(ch, chargesPerCast());
 
@@ -220,9 +223,10 @@ public class _HeavensDoor extends Wand {
 
 		if(enemy.buff(_Corruption.class) != null){
 			Buff.affect(enemy, _Doom.class);
+			return;
 		}
 
-		if (!enemy.isImmune(_Corruption.class)){
+		if (!enemy.isImmune(Corruption.class)){
 			//enemy.HP = enemy.HT;
 			for (Buff buff : enemy.buffs()) {
 				if (buff.type == Buff.buffType.NEGATIVE

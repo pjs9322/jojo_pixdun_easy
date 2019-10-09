@@ -12,7 +12,7 @@ allprojects {
 
     ext {
         appName = '죠기던 easy'
-        appPackageName = 'com.shatteredpixel.shatteredpixeldungeon'
+        appPackageName = 'com.jojopixdun.jojopixduneasy'
 
         appVersionCode = 372
         appVersionName = '0.7.5a'
