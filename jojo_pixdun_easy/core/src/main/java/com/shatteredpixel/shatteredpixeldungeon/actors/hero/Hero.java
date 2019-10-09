@@ -262,7 +262,7 @@ public class Hero extends Char {
 		attackSkill = bundle.getInt( ATTACK );
 		defenseSkill = bundle.getInt( DEFENSE );
 
-		// 직업이 전사라면 사거리 증가를 적용
+		// 직업이 폴나레프라면 사거리 증가를 적용
 		if (heroClass == HeroClass.WARRIOR) reach = true;
 
 		STR = bundle.getInt( STRENGTH );
@@ -310,7 +310,12 @@ public class Hero extends Char {
 		KindOfWeapon equipped = belongings.weapon;
 		belongings.weapon = wep;
 		boolean hit = attack( enemy );
-		Invisibility.dispel();
+
+		// 직업이 신출귀몰의 암살자라면 공격하여도 은신이 해제되지 않음
+		if (subClass != HeroSubClass.FREERUNNER){
+			Invisibility.dispel();
+		}
+
 		belongings.weapon = equipped;
 		
 		if (subClass == HeroSubClass.GLADIATOR){
@@ -453,7 +458,7 @@ public class Hero extends Char {
 		KindOfWeapon wep = Dungeon.hero.belongings.weapon;
 
 		if (wep != null){
-			// 직업이 전사일 경우 공격 사거리 +1
+			// 직업이 폴나레프일 경우 공격 사거리 +1
 			// canReach 메서드 내부에 작성
 			return wep.canReach(this, enemy.pos);
 		} else {
@@ -1543,8 +1548,11 @@ public class Hero extends Char {
 				if (combo != null) combo.miss( enemy );
 			}
 		}
-		
-		Invisibility.dispel();
+
+		// 직업이 신출귀몰의 암살자라면 공격하여도 은신이 해제되지 않음
+		if (subClass != HeroSubClass.FREERUNNER){
+			Invisibility.dispel();
+		}
 		spend( attackDelay() );
 
 		curAction = null;
