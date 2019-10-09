@@ -125,19 +125,11 @@ public class TitleScene extends PixelScene {
 		TitleButton btnSupport = new TitleButton(Messages.get(this, "support")){
 			@Override
 			protected void onClick() {
-				WndOptions wnd = new WndOptions(Messages.get(TitleScene.class, "support"),
-						Messages.get(TitleScene.class, "patreon_body"),
-						Messages.get(TitleScene.class, "patreon_button")){
-					@Override
-					protected void onSelect(int index) {
-						if (index == 0){
-							DeviceCompat.openURI("https://www.patreon.com/ShatteredPixel");
-						} else {
-							hide();
-						}
-					}
-				};
-				parent.add(wnd);
+				if (Game.scene() instanceof TitleScene) {
+					Game.instance.finish();
+				} else {
+					ShatteredPixelDungeon.switchNoFade( TitleScene.class );
+				}
 			}
 		};
 		btnSupport.icon(Icons.get(Icons.GOLD));
